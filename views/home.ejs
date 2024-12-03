@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>URL Shortener</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>  
+    <div class="flex nav" style="justify-content: end;">
+      <% if (locals.user) { %>
+        <p class="user-email"> <%= locals.user.email %></p>
+        <a href="/a/logout" class="logout-link">Logout</a>
+      <% } else { %>
+        <a href="/a/login">Login</a>
+        <a href="/a/signup">Sign Up</a>
+      <% } %>
+    </div>
+    <h1 class="flex">Transform Your Links: The Ultimate URL Shortener!</h1>
+
+
+    <form action="/url" method="post">
+      <div class="flex flex-column" style="padding: 2rem; gap:1.5rem">
+        <div>
+          <label for="url" style="display: block;">Shorten Your URL in Just a Few Clicks!</label>
+          <input type="text" name="url" id="url" placeholder="https://example.com" required />
+        </div>
+  
+        <% if (locals.user) { %>
+          <div>
+            <label for="ShortURL" style="display: block;">Custom Path</label>
+            <input type="text" name="ShortURL" id="ShortURL" />
+          </div>
+        <% } else { %>
+          <p class="note">Note: You have to be logged in to use the custom path feature.</p>
+        <% } %>
+  
+        <button type="submit">Shorten URL</button>
+      </div>
+    </form>
+
+    <% if (locals.ShortURL) { %>
+      <div class="flex">
+        <div>
+          <h3>Your Snazzy Shortened URL Awaits!</h3>
+          <div class="wrapper">
+            <a href=<%=`/${ShortURL}` %> target="_blank"><%= `${reqInfo}/${ShortURL}` %></a>
+          </div>
+        </div>
+      </div>
+    <% } else if (locals.error) { %>
+      <h3 class="error-message">Oops! Something Went Wrong...</h3>
+    <% } %>
+
+    <!-- Table -->
+    <% if (locals.urls) { %>
+      <div class="table-wrapper flex">
+        <table>
+          <thead>
+            <tr>
+              <th>S.NO</th>
+              <th>Links</th>
+              <th>Shortened Links</th>
+              <th>NO. of Clicks</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% urls?.forEach((url, index) => { %>
+              <tr>
+                <td><%= index + 1 %></td>
+                <td><%= url.redirectURL %></td>
+                <td><a href=<%=`${reqInfo}/${url.shortId}` %> target="_blank"><%= `${reqInfo}/${url.shortId}` %></a></td>
+                <td><%= url.visitHistory.length %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </body>
+</html>
