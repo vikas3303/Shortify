@@ -22,7 +22,7 @@ connnectToMongoDB(process.env.MONGO_URL).then(() =>
 
 
 app.set("view engine","ejs");
-app.set('views',path.resolve("./views"));
+app.set("views",path.resolve("./views"));
 
 
 // middleware
