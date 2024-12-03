@@ -1,4 +1,8 @@
-// require("dotenv").config();
+require("dotenv").config();
+console.log(process.env.PORT);
+console.log(process.env.JWT_SECRET);
+console.log(process.env.MONGO_URL);
+
 const express = require("express");
 const path=require("path");
 const cookieParser=require("cookie-parser");
@@ -12,30 +16,26 @@ const {
     restrictTo,
 }=require("./middleware/auth.middleware");
 
-
-
-const URL=require("./models/url.models");
-
+// connection
 const app = express();
-const PORT = 8003;
-connnectToMongoDB("mongodb://127.0.0.1:27017/short-url")
-.then(() => console.log("MongoDB connected")
+const PORT = process.env.PORT || 8000;
+connnectToMongoDB(process.env.MONGO_URL).then(() =>
+    console.log("mongoDB connected !!")
 );
-
 
 
 app.set("view engine","ejs");
 app.set('views',path.resolve("./views"));
 
 
-
+// middleware
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(express.static(path.resolve("./public")));
 app.use(cookieParser());
 app.use(checkAuth);
 
-
+// routes
 app.use("/url",restrictTo(["USER","ADMIN"]), urlRoute);
 app.use("/user",userRoute);
 app.use("/",homeRoute);
@@ -57,6 +57,3 @@ app.listen(PORT, () => console.log(`server at started at PORT :${PORT}`));
 
 
 
-// connectToMongo(process.env.MONGO_URL).then(() =>
-//     console.log("mongoDB connected !!")
-//   );
