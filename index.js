@@ -1,8 +1,4 @@
 require("dotenv").config();
-console.log(process.env.PORT);
-console.log(process.env.JWT_SECRET);
-console.log(process.env.MONGO_URL);
-
 const express = require("express");
 const path=require("path");
 const cookieParser=require("cookie-parser");
@@ -19,6 +15,7 @@ const {
 // connection
 const app = express();
 const PORT = process.env.PORT || 8000;
+
 connnectToMongoDB(process.env.MONGO_URL).then(() =>
     console.log("mongoDB connected !!")
 );
